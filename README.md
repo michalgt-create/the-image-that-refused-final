@@ -55,3 +55,21 @@ The published URL typically looks like `https://YOUR-USERNAME.github.io/the-imag
 - [ ] Read through Part A and verify it reflects your interpretation.
 - [ ] Change the author credit if your instructor requires your name; do not publish private details unnecessarily.
 - [ ] Test the interaction, mobile layout, GitHub Pages links, and image loading after deployment.
+
+## Part A — Response to the Original Artwork
+
+**Original artwork:** *Salaf* (2020), Nouf Aljowaysir
+
+### 1. Which archive or dataset does the artwork use, and what is missing?
+
+*Salaf* draws on photographs from Gertrude Bell’s archive and an Orientalist photographic collection from the Getty Museum. Aljowaysir also creates an “absent dataset” by replacing human figures with white silhouettes. The work highlights the underrepresentation and misrepresentation of non-Western cultures in AI models and their learned representations.
+
+### 2. What does the latent space reveal, and what does it conceal?
+
+The work reveals biases in the patterns learned by AI systems: an object held by a child is labeled a “skateboard,” while Bedouin clothing is identified as a “military uniform.” Even after the figures are removed, the generative model reproduces visual poses associated with Orientalist photography. These results expose learned statistical patterns while showing how identities and cultural contexts can be erased or misrepresented.
+
+### 3. Which strategy does the artwork employ: glitch, concealment, or refusal?
+
+The central strategy is **refusal through deliberate concealment**. By removing the human figures, Aljowaysir rejects their use as training material. As Somaini quotes the artist, the removal was “a symbolic act: a refusal to allow certain data to become training material” (Somaini, 2026, p. 46).
+
+**Reference:** Antonio Somaini, “Latent Spaces: AI, Art, and the Archive,” *October* 196 (Spring 2026), pp. 46–48. https://doi.org/10.1162/OCTO.a.545
