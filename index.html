@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#111614" />
+  <meta name="description" content="The Image That Refused — a one-page interactive art response to Nouf Aljowaysir's Salaf and Antonio Somaini's Latent Spaces." />
+  <title>THE IMAGE THAT REFUSED — An Interactive Counter-Archive</title>
+  <style>
+    :root {
+      --paper:#f1f0eb; --ivory:#faf9f4; --ink:#151a18; --dark:#111614;
+      --dark2:#1b2220; --muted:#68706b; --line:#c6c9c2;
+      --red:#e35c4c; --red2:#b94235; --mint:#bec9be;
+      --sans:Arial,Helvetica,sans-serif; --serif:Georgia,'Times New Roman',serif;
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.6 var(--sans);-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-underline-offset:4px;text-decoration-thickness:1px}
+    button{font:inherit;cursor:pointer}
+    button:focus-visible,a:focus-visible{outline:3px solid var(--red);outline-offset:4px}
+    .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+    .skip{position:absolute;top:-100px;left:14px;z-index:99;background:white;color:#111;padding:12px 17px}.skip:focus{top:14px}
+    .wrap{width:min(1440px,calc(100% - 80px));margin:0 auto}
+    .mono{font:700 11px/1.5 var(--sans);letter-spacing:.17em;text-transform:uppercase}
+    .topbar{border-bottom:1px solid var(--line);background:var(--paper)}
+    .topbar .wrap{min-height:68px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+    .brand{font-size:12px;text-decoration:none;font-weight:700;letter-spacing:.16em}
+    nav{display:flex;align-items:center;gap:25px;flex-wrap:wrap}
+    nav a{font-size:11px;font-weight:bold;text-decoration:none;text-transform:uppercase;letter-spacing:.11em;color:#555f59}
+    nav a:hover{color:var(--red2)}
+    .hero{padding:68px 0 52px}
+    .hero-meta{display:flex;justify-content:space-between;gap:20px;color:var(--muted)}
+    .hero-meta .accent{color:var(--red2)}
+    h1{font:400 clamp(74px,11.45vw,190px)/.83 var(--serif);letter-spacing:-.085em;margin:38px 0 34px;max-width:1300px}
+    h1 .punch{color:var(--red2)}
+    .hero-row{display:grid;grid-template-columns:1.15fr .85fr;gap:30px;align-items:end}
+    .hero-statement{font:400 clamp(25px,3vw,46px)/1.15 var(--serif);letter-spacing:-.045em;margin:0}
+    .hero-intro{max-width:370px;margin:0 0 4px auto;color:#5c645e;font-size:15px}
+    .rule{border:0;border-top:1px solid var(--line);margin:0}
+    .experience{padding:26px 0 72px}
+    .section-kicker{display:flex;justify-content:space-between;gap:14px;margin:0 0 18px;color:var(--muted)}
+    .machine{background:var(--dark);color:var(--ivory);overflow:hidden;border:1px solid #353d39;isolation:isolate}
+    .machine-toolbar{height:50px;border-bottom:1px solid #39413b;padding:0 24px;display:flex;align-items:center;justify-content:space-between;gap:15px;color:#c8cbc6}
+    .machine-toolbar span:last-child{color:#ec9288}
+    .machine-layout{display:grid;grid-template-columns:minmax(0,1fr) 325px;min-height:635px}
+    .stage{position:relative;isolation:isolate;overflow:hidden;min-height:635px;background:radial-gradient(circle at 50% 47%,#303833 0%,#151b18 69%)}
+    .stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,transparent 45%,rgba(10,14,12,.52));z-index:7}
+    .grid-lines{position:absolute;inset:0;z-index:0;background-image:linear-gradient(to right,rgba(221,231,221,.12) 1px,transparent 1px),linear-gradient(to bottom,rgba(221,231,221,.12) 1px,transparent 1px);background-size:60px 60px}
+    .stage-guides{position:absolute;inset:26px;border:1px solid rgba(224,232,223,.06);z-index:1;pointer-events:none}
+    .stage-guides::before,.stage-guides::after{content:"";position:absolute;background:rgba(221,231,221,.12)}
+    .stage-guides::before{width:1px;top:0;bottom:0;left:50%}
+    .stage-guides::after{height:1px;left:0;right:0;top:50%}
+    .portrait{position:absolute;z-index:2;height:87%;width:min(55%,390px);left:50%;top:6.5%;transform:translateX(-50%);transition:filter .65s,opacity .65s,transform .75s cubic-bezier(.16,.8,.23,1);overflow:hidden;background:#555}
+    .portrait img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(1)}
+    .caption-stage{position:absolute;left:24px;bottom:21px;z-index:15;color:#c3cac3}
+    .specimen{position:absolute;right:22px;top:25px;z-index:15;color:#adbbb0}
+    .scanline{position:absolute;z-index:5;top:-4%;left:22%;width:56%;height:2px;background:var(--red);opacity:0;box-shadow:0 0 22px 4px rgba(226,91,74,.65);pointer-events:none}
+    .facebox{position:absolute;z-index:5;left:50%;top:24%;transform:translateX(-50%);width:min(37%,270px);height:37%;border:1px solid #ededdf;opacity:0;transition:opacity .3s,width .55s,height .55s,top .55s;pointer-events:none}
+    .facebox::before,.facebox::after{content:"";position:absolute;width:30px;height:30px;border:5px solid var(--red)}
+    .facebox::before{left:-4px;top:-4px;border-right:0;border-bottom:0}
+    .facebox::after{right:-4px;bottom:-4px;border-left:0;border-top:0}
+    .annotation{position:absolute;z-index:6;background:#e5e5dc;color:#18201b;padding:6px 9px;font:700 10px/1.3 var(--sans);letter-spacing:.12em;opacity:0;transform:translateY(9px);transition:opacity .25s,transform .25s;pointer-events:none}
+    .a1{left:8%;top:22%}.a2{right:8%;top:40%}.a3{left:11%;top:65%}.a4{right:8%;top:75%}
+    .a2,.a4{background:var(--red);color:#151515}
+    .redaction{position:absolute;inset:0;z-index:8;pointer-events:none;opacity:0;transition:opacity .38s;background:linear-gradient(90deg,transparent 0%,rgba(16,20,17,.06) 47%,transparent 90%)}
+    .redaction .bar{position:absolute;left:6%;right:6%;height:32px;background:var(--dark);border-left:7px solid var(--red)}
+    .redaction .bar:nth-child(1){top:23%;transform:rotate(5deg)}
+    .redaction .bar:nth-child(2){top:40%;transform:rotate(-4deg);left:16%}
+    .redaction .bar:nth-child(3){top:64%;transform:rotate(3deg);right:15%}
+    .fragments{position:absolute;z-index:9;left:50%;top:50%;width:min(77%,600px);height:min(76%,490px);transform:translate(-50%,-47%) scale(1.07);display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);gap:8px;opacity:0;pointer-events:none;transition:opacity .38s,transform .58s ease}
+    .fragment{position:relative;overflow:hidden;border:1px solid rgba(238,242,231,.55);background:#bcbdb6}
+    .fragment::before{content:"";position:absolute;inset:0;background-image:url('assets/family-portrait.jpg');background-size:330% 270%;filter:grayscale(1) contrast(1.45)}
+    .fragment:nth-child(1)::before{background-position:22% 18%}.fragment:nth-child(2)::before{background-position:60% 4%}.fragment:nth-child(3)::before{background-position:96% 24%}
+    .fragment:nth-child(4)::before{background-position:12% 68%}.fragment:nth-child(5)::before{background-position:70% 76%}.fragment:nth-child(6)::before{background-position:96% 97%}
+    .fragment::after{content:attr(data-tag);position:absolute;left:0;bottom:0;right:0;background:#111614df;color:#faf9f4;padding:9px 6px;font:700 9px/1.2 var(--sans);letter-spacing:.08em;text-align:center}
+    .erase-text{position:absolute;z-index:10;left:0;right:0;top:51%;text-align:center;color:#fff;background:rgba(17,22,20,.87);padding:19px 12px;opacity:0;font:700 clamp(22px,3.5vw,51px)/1.03 var(--sans);letter-spacing:-.045em;pointer-events:none}
+    .refusal-halo{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .5s;background:radial-gradient(circle at 50% 47%,rgba(229,222,198,.3),transparent 57%)}
+    .refusal-word{position:absolute;z-index:6;bottom:19%;left:6%;right:6%;font:400 clamp(52px,7vw,113px)/.9 var(--serif);letter-spacing:-.075em;text-align:center;color:#f1eee6;text-shadow:0 2px 18px rgba(12,13,10,.82);opacity:0;transform:translateY(25px);transition:opacity .65s,transform .65s;pointer-events:none}
+    .stage-refusal .refusal-word{opacity:1;transform:translateY(0)}
+    .stage-refusal .refusal-halo{opacity:1}
+    .stage-refusal .portrait{filter:contrast(1.05);transform:translateX(-50%) scale(1.03)}
+    .stage-detect .scanline,.stage-classify .scanline{opacity:1;animation:scan 2.45s linear infinite}
+    .stage-detect .facebox,.stage-classify .facebox{opacity:1}
+    .stage-detect .portrait{transform:translateX(-50%) scale(1.04)}
+    .stage-classify .portrait{transform:translateX(-50%) scale(1.095);filter:contrast(1.22)}
+    .stage-classify .annotation{opacity:1;transform:none}
+    .stage-classify .facebox{width:31%;height:42%;top:19%}
+    .stage-reduce .portrait{filter:grayscale(1) contrast(1.6) blur(2px);opacity:.23;transform:translateX(-50%) scale(1.13)}
+    .stage-reduce .fragments{opacity:1;transform:translate(-50%,-50%) scale(1)}
+    .stage-reduce .redaction{opacity:1}
+    .stage-reduce .erase-text{opacity:1}
+    .interface{border-left:1px solid #424a43;display:flex;flex-direction:column;padding:29px 27px 27px;min-width:0}
+    .interface .eyebrow{color:#b2c0b5}
+    .status-dot{display:inline-block;width:7px;height:7px;margin-right:9px;border-radius:50%;background:var(--red)}
+    .interface h2{font:400 36px/1.05 var(--serif);letter-spacing:-.035em;margin:19px 0 14px;min-height:88px}
+    .interface p{font-size:14px;color:#bfc7bd;margin:0;min-height:87px}
+    .progress{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin:22px 0 14px}
+    .progress b{height:4px;background:#374038;display:block;transition:background .22s}
+    .progress b.on{background:var(--red)}
+    .readout{margin-top:auto;border-top:1px solid #424a43;padding-top:19px}
+    .readout dl{display:grid;grid-template-columns:1fr auto;gap:12px 7px;margin:0;font:700 11px/1.3 var(--sans);letter-spacing:.07em}
+    .readout dt{color:#bcc5ba}.readout dd{margin:0;text-align:right;color:#f08b80}
+    .primary{background:#e9e8df;color:#181d19;border:1px solid #e9e8df;width:100%;padding:18px 10px;font-weight:800;font-size:12px;letter-spacing:.14em;text-transform:uppercase;margin-top:26px;transition:background .15s}
+    .primary:hover{background:#fff}.secondary{background:transparent;color:#e8e8e0;border:1px solid #6d786e;width:100%;padding:13px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-top:9px}
+    .secondary:hover{background:#29332d}
+    .machine-footer{border-top:1px solid #404a42;padding:15px 24px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;color:#b5bbb3}
+    .after-note{display:grid;grid-template-columns:1fr 1fr;gap:35px;margin-top:17px;color:#5d665f;font-size:13px}
+    .after-note p{margin:0}
+    .after-note strong{color:#252d26}
+    .section{border-top:1px solid var(--line);padding:90px 0 96px;scroll-margin-top:18px}
+    .section-heading{display:grid;grid-template-columns:24% 1fr;gap:35px;align-items:start;margin-bottom:40px}
+    .section-heading h2{font:400 clamp(54px,6.25vw,93px)/.94 var(--serif);letter-spacing:-.065em;margin:0}
+    .section-heading .meta{color:var(--muted)}
+    .counter-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}
+    .counter-intro{max-width:850px;font:400 24px/1.35 var(--serif);letter-spacing:-.022em;margin:0 0 32px}
+    .taxonomy-box{background:#e3e5de;padding:28px;min-height:310px;border:1px solid #c7cbc2}
+    .taxonomy-box.alternative{background:#dde8db}
+    .taxonomy-box h3{font-size:12px;font-weight:800;letter-spacing:.14em;margin:0 0 24px;text-transform:uppercase;color:#475149}
+    .taxonomy-box ol{list-style:none;margin:0;padding:0;display:grid;gap:0}
+    .taxonomy-box li{display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #bec4ba;font:400 22px/1.3 var(--serif)}
+    .taxonomy-box li span{font:700 10px var(--sans);letter-spacing:.1em;color:#778077}
+    .taxonomy-box.alternative li{font-style:italic}
+    .source-layout{display:grid;grid-template-columns:1fr .85fr;gap:56px;align-items:start}
+    .salaf-art{background:#202422;padding:16px}
+    .salaf-art img{width:100%;height:auto;display:block;object-fit:contain;filter:grayscale(1)}
+    .salaf-caption{font:12px/1.7 var(--sans);color:#636963;margin:12px 0 0}
+    .source-text h3{font:400 clamp(40px,4.6vw,68px)/1 var(--serif);letter-spacing:-.05em;margin:0 0 25px}
+    .source-text p{font-size:16px;line-height:1.8;max-width:520px}
+    .source-text a{font-weight:700}
+    .paper{max-width:960px;margin-left:auto}
+    .paper-header{display:flex;gap:18px;justify-content:space-between;align-items:center;border-top:2px solid var(--ink);padding:15px 0 20px;color:#515953}
+    .qa{display:grid;grid-template-columns:50px 1fr;gap:20px;border-top:1px solid var(--line);padding:25px 0}
+    .qa-num{font:400 24px/1 var(--serif);color:#b94b3f}
+    .qa h3{font:700 17px/1.45 var(--sans);margin:0 0 12px}.qa p{font-size:16px;line-height:1.8;margin:0}
+    .quote-inline{font-family:var(--serif);font-style:italic}
+    .method-grid{display:grid;grid-template-columns:1fr 1fr;gap:65px}
+    .method-grid h3{font:400 35px/1.15 var(--serif);letter-spacing:-.035em;margin:0 0 21px}
+    .method-grid p{font-size:16px;line-height:1.78;margin:0 0 18px}
+    .method-grid ul{padding-left:20px;line-height:1.9}
+    .statement{margin:57px 0 20px;padding:36px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 2fr;gap:45px}
+    .statement p{margin:0;font:400 clamp(24px,3vw,41px)/1.23 var(--serif);letter-spacing:-.026em}
+    .closing{padding:85px 0 100px;display:grid;grid-template-columns:1.4fr .6fr;gap:40px}
+    .closing h2{font:400 clamp(70px,10vw,146px)/.9 var(--serif);letter-spacing:-.07em;margin:0}
+    .closing p{max-width:325px;color:var(--muted)}
+    footer{border-top:1px solid var(--line);padding:22px 0 40px}
+    footer .wrap{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;font-size:12px;color:#515953}
+    .inline-link{color:#a84538}
+    @keyframes scan{0%{top:8%}100%{top:91%}}
+    @media(max-width:1080px){.machine-layout{grid-template-columns:minmax(0,1fr) 290px}.interface{padding:24px 20px}.stage,.machine-layout{min-height:545px}.stage{min-height:545px}.portrait{width:min(57%,345px)}.fragments{width:83%}}
+    @media(max-width:830px){.wrap{width:calc(100% - 42px)}.hero{padding-top:45px}.hero-row,.source-layout,.method-grid,.counter-grid,.closing,.after-note{grid-template-columns:1fr}.hero-intro{margin:0}.machine-layout{grid-template-columns:1fr}.stage{min-height:545px}.interface{border-left:0;border-top:1px solid #424a43;min-height:300px}.interface h2{min-height:auto}.interface p{min-height:auto}.readout{margin-top:20px}.section-heading{grid-template-columns:1fr;gap:15px}.section{padding:65px 0}.closing{gap:16px}}
+    @media(max-width:540px){.wrap{width:calc(100% - 30px)}.topbar .wrap{padding:14px 0;align-items:flex-start;flex-direction:column}.topbar nav{gap:17px}nav a{font-size:10px}.hero{padding:34px 0}.hero-meta{font-size:9px}h1{font-size:clamp(59px,15vw,85px)}.hero-statement{font-size:26px}.hero-intro{font-size:13px}.machine-toolbar{padding:0 12px;font-size:9px}.stage{min-height:425px}.portrait{width:66%;height:87%}.annotation{font-size:8px;padding:5px}.a1{left:3%;top:19%}.a2{right:1%;top:40%}.a3{left:3%;top:70%}.a4{right:2%;top:75%}.fragments{width:93%;height:67%;gap:4px}.fragment::after{font-size:7px}.refusal-word{font-size:52px;bottom:18%}.caption-stage{font-size:9px}.interface{padding:22px 18px}.interface h2{font-size:32px}.machine-footer{padding:13px;font-size:9px}.counter-intro{font-size:21px}.taxonomy-box{padding:19px;min-height:auto}.taxonomy-box li{font-size:19px}.qa{grid-template-columns:28px 1fr;gap:10px}.qa p{font-size:14px}.paper-header{flex-wrap:wrap}.statement{grid-template-columns:1fr;gap:15px}.closing{padding:55px 0}.closing h2{font-size:70px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <a href="#experience" class="skip">Skip to interactive artwork</a>
+  <header class="topbar">
+    <div class="wrap">
+      <a class="brand" href="#top">LATENT SPACES / 02</a>
+      <nav aria-label="Primary navigation">
+        <a href="#experience">The work</a><a href="#counter">Counter-archive</a><a href="#salaf">Salaf</a><a href="#analysis">Part A</a><a href="#method">Part B</a>
+      </nav>
+    </div>
+  </header>
+  <main id="top">
+    <section class="hero wrap" aria-labelledby="main-title">
+      <div class="hero-meta mono"><span><span class="accent">●</span> A CRITICAL INTERACTIVE ARTWORK</span><span>ART / ARCHIVE / AI — 2026</span></div>
+      <h1 id="main-title">THE IMAGE<br>THAT <span class="punch">REFUSED.</span></h1>
+      <div class="hero-row">
+        <p class="hero-statement">You can describe an image.<br>Can you claim its meaning?</p>
+        <p class="hero-intro">A portrait from a personal archive enters a classification machine. Every attempt to understand it reduces something more. On the fourth attempt, the image refuses.</p>
+      </div>
+    </section>
+    <hr class="rule" />
+
+    <section id="experience" class="experience wrap" aria-label="Part B: interactive artwork">
+      <div class="section-kicker mono"><span>01 / THE ARTWORK</span><span>FOUR ATTEMPTS · ONE REFUSAL</span></div>
+      <div class="machine" id="machine">
+        <div class="machine-toolbar mono"><span>VISION ENGINE / ARCHIVE SUBJECT 001</span><span id="toolbar-status">READY</span></div>
+        <div class="machine-layout">
+          <div class="stage" id="stage" role="img" aria-label="An interactive photographic portrait. Each attempted classification adds visual interference; the final state restores the portrait and rejects the labels.">
+            <div class="grid-lines" aria-hidden="true"></div>
+            <div class="stage-guides" aria-hidden="true"></div>
+            <div class="refusal-halo" aria-hidden="true"></div>
+            <div class="portrait" id="portrait"><img src="assets/family-portrait.jpg" alt="Black-and-white archival portrait of a person facing the camera, wearing an embroidered garment, layered jewelry, and a patterned head covering." /></div>
+            <div class="scanline" aria-hidden="true"></div>
+            <div class="facebox" aria-hidden="true"></div>
+            <div class="annotation a1" aria-hidden="true">FACE / 001</div>
+            <div class="annotation a2" aria-hidden="true">SURFACE / TEXTILE</div>
+            <div class="annotation a3" aria-hidden="true">ORNAMENT / 003</div>
+            <div class="annotation a4" aria-hidden="true">ARCHIVE OBJECT</div>
+            <div class="redaction" aria-hidden="true"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+            <div class="fragments" aria-hidden="true">
+              <div class="fragment" data-tag="FACE"></div><div class="fragment" data-tag="GARMENT"></div><div class="fragment" data-tag="CROP 03"></div><div class="fragment" data-tag="SURFACE"></div><div class="fragment" data-tag="ORNAMENT"></div><div class="fragment" data-tag="UNKNOWN"></div>
+            </div>
+            <div class="erase-text" aria-hidden="true">A PERSON → A RECORD</div>
+            <div class="refusal-word" aria-hidden="true">NOT YOUR<br>CATEGORY.</div>
+            <span class="caption-stage mono" id="stage-status">AWAITING CLASSIFICATION</span>
+            <span class="specimen mono">001 / PERSONAL ARCHIVE</span>
+          </div>
+          <aside class="interface" aria-label="Classification simulation controls">
+            <span class="mono eyebrow"><i class="status-dot" aria-hidden="true"></i> SIMULATED CLASSIFIER</span>
+            <h2 id="step-heading">A person, not a data point.</h2>
+            <p id="step-description">Press START SCAN. Watch what is removed each time the system tries to make the image measurable.</p>
+            <div class="progress" aria-label="Classification progress" id="progress"><b></b><b></b><b></b><b></b></div>
+            <div class="readout"><dl>
+              <dt>STAGE</dt><dd id="read-stage">00 / 04</dd>
+              <dt>OPERATION</dt><dd id="read-operation">WAITING</dd>
+              <dt>OUTPUT</dt><dd id="read-output">UNASSIGNED</dd>
+            </dl></div>
+            <button id="next" type="button" class="primary">START SCAN ↗</button>
+            <button id="restart" type="button" class="secondary" hidden>RESTART EXPERIENCE</button>
+          </aside>
+        </div>
+        <div class="machine-footer mono"><span>EXHIBIT A / CONTROLLED FICTION</span><span>NO CAMERA · NO TRACKING · NO LIVE AI</span></div>
+      </div>
+      <div class="after-note"><p><strong>Instructions:</strong> Advance through four stages: Detect → Classify → Reduce → Refuse. Each stage changes the image and the language used to describe it.</p><p><strong>Transparency:</strong> The classification system is an artistic simulation. The displayed labels are authored for this piece—not generated by a model—and no personal information is collected.</p></div>
+      <div class="sr-only" aria-live="polite" id="live-announcement"></div>
+    </section>
+
+    <section id="counter" class="section">
+      <div class="wrap">
+        <div class="section-heading"><div class="mono meta">02 / AN ALTERNATIVE TAXONOMY</div><h2>The missing field<br>is the person.</h2></div>
+        <p class="counter-intro">The machine can label what is visible. It cannot determine what a life means, what a family remembers, or whether visibility constitutes permission. These are not competing AI predictions; they are two different ways of relating to an image.</p>
+        <div class="counter-grid">
+          <div class="taxonomy-box"><h3>Machine taxonomy / scripted vocabulary</h3><ol>
+            <li><span>01</span> Face</li><li><span>02</span> Garment</li><li><span>03</span> Ornament</li><li><span>04</span> Archive object</li>
+          </ol></div>
+          <div class="taxonomy-box alternative"><h3>Counter-taxonomy / what resists extraction</h3><ol>
+            <li><span>01</span> A life beyond the frame</li><li><span>02</span> A memory, not metadata</li><li><span>03</span> A story not inferred from appearance</li><li><span>04</span> The right to refuse a label</li>
+          </ol></div>
+        </div>
+        <p style="max-width:780px;color:#59635c;font-size:13px;margin-top:18px">The counter-taxonomy makes an ethical claim, not a claim to know the photographed person's identity, feelings, or biography. This distinction matters: an archival image can be interpreted without pretending to recover information it does not contain.</p>
+      </div>
+    </section>
+
+    <section id="salaf" class="section">
+      <div class="wrap">
+        <div class="section-heading"><div class="mono meta">03 / THE ORIGINAL WORK</div><h2>Salaf:<br>absence as refusal.</h2></div>
+        <div class="source-layout">
+          <div>
+            <div class="salaf-art"><img src="https://images.squarespace-cdn.com/content/v1/55039003e4b04b9963242639/fa3eb97d-8eb0-4a47-9283-c0728d2702a9/191--Woman%2Bwith%2Bjewelry-2102.png" loading="lazy" alt="Nouf Aljowaysir's Salaf #2102: a portrait in which the human figure is replaced with a white silhouette, leaving traces of adornment and clothing." onerror="this.onerror=null;this.src='assets/salaf-reference.jpg';this.alt='Documentation of Salaf showing an arrangement of archival pictures whose human figures have been removed.'" /></div>
+            <p class="salaf-caption"><em>Salaf #2102 — Woman with jewelry</em>, Nouf Aljowaysir, from the series <em>Salaf (Ancestors)</em> (2020 onward). Image linked from the artist's site; when unavailable, the page displays a reference montage reproduced in Somaini, <em>October</em> 196 (2026), pp. 47–48. Artwork © Nouf Aljowaysir. Confirm permission for public reuse.</p>
+          </div>
+          <div class="source-text">
+            <div class="mono" style="color:#657067;margin-bottom:15px">NOUF ALJOWAYSIR / 2020</div>
+            <h3>How do you refuse<br>to become data?</h3>
+            <p>In <em>Salaf</em>, Nouf Aljowaysir tests machine vision against photographs of Bedouin communities and encounters errors rooted in limited, biased representations. She then removes people from Orientalist archival photographs, replacing them with white silhouettes.</p>
+            <p>By creating an <em>absent dataset</em>, she refuses to let these stereotyped representations become ordinary training material. The result makes absence visible—and turns technical segmentation into a political and artistic gesture.</p>
+            <p><a class="inline-link" href="https://www.noufaljowaysir.com/work/salaf" target="_blank" rel="noopener noreferrer">Explore Salaf on the artist's website ↗</a></p>
+            <p><a class="inline-link" href="https://doi.org/10.1162/OCTO.a.545" target="_blank" rel="noopener noreferrer">Read Somaini's article ↗</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="analysis" class="section">
+      <div class="wrap">
+        <div class="section-heading"><div class="mono meta">04 / PART A · CRITICAL RESPONSE</div><h2>What the archive<br>makes possible.</h2></div>
+        <div class="paper">
+          <div class="paper-header"><span class="mono">SALAF — THREE QUESTIONS</span><span class="mono">APPROX. 190 WORDS</span></div>
+          <div class="qa"><div class="qa-num">01</div><div><h3>Which archive or dataset does the work use, and what is missing from it?</h3><p><em>Salaf</em> draws on photographs from Gertrude Bell's archive and Orientalist collections at the Getty Museum. Aljowaysir first tests machine-vision labels on Bedouin images, then removes human figures from a separate group of photographs to construct an “absent dataset.” The work exposes the underrepresentation and misrepresentation of non-Western cultures in learned AI representations. The article does not identify every training image used by the recognition systems.</p></div></div>
+          <div class="qa"><div class="qa-num">02</div><div><h3>What does latent space reveal, and what does it conceal?</h3><p>The models' errors reveal learned associations: an object held by a child becomes a “skateboard,” and Bedouin clothing becomes a “military uniform.” A generative model trained on the erased images still reproduces recurring Orientalist poses and conventions. Such outputs reveal patterns retained by statistical representations while exposing their failure to preserve cultural specificity, lived identities, and historical context. The latent space itself is not directly visualized.</p></div></div>
+          <div class="qa"><div class="qa-num">03</div><div><h3>Is the strategy glitch, concealment, or refusal?</h3><p>The central strategy is <strong>refusal enacted through deliberate concealment</strong>. White silhouettes prevent the photographed people from being treated as ordinary training material. Somaini quotes the artist describing this as <span class="quote-inline">“a symbolic act: a refusal to allow certain data to become training material”</span> (2026, p. 46). Absence becomes a critique of who has the power to extract, classify, and reproduce human images.</p></div></div>
+          <p style="color:#667066;font-size:13px;margin:17px 0">Source: Antonio Somaini, “Latent Spaces: AI, Art, and the Archive,” <em>October</em> 196 (Spring 2026), pp. 18–60, especially p. 46. <a href="https://doi.org/10.1162/OCTO.a.545" target="_blank" rel="noopener noreferrer">DOI ↗</a></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="section">
+      <div class="wrap">
+        <div class="section-heading"><div class="mono meta">05 / PART B · PROCESS & RESPONSE</div><h2>Refusal without<br>disappearance.</h2></div>
+        <div class="method-grid">
+          <div><h3>The artistic move</h3><p>This work <strong>reverses a strategy</strong> and <strong>replaces the source archive</strong>. It begins with a photograph from a personal collection rather than an institutional colonial archive. Instead of removing the depicted person, it makes the imaginary classifier lose authority over the image.</p><p>Four scripted operations—<em>Detect, Classify, Reduce, Refuse</em>—turn an intact portrait into isolated features and database-like fragments. In the final stage, the labels disappear and the person returns to full visibility.</p></div>
+          <div><h3>Tools &amp; transparency</h3><p><strong>Tools:</strong> one HTML file with embedded CSS and JavaScript, assembled with ChatGPT assistance and intended for editing in Visual Studio Code and publishing through GitHub Pages. A user-supplied archival portrait and documentation of <em>Salaf</em> are the visual sources.</p><p><strong>No real recognition system is running.</strong> The classification labels, interface, and failures are deliberately staged as part of the artwork. The piece makes a conceptual argument; it is not evidence that an actual AI model failed to identify this person.</p></div>
+        </div>
+        <div class="statement"><span class="mono" style="color:#69736b">HOW MY WORK RESPONDS TO SALAF · THREE SENTENCES</span><p>In <em>Salaf</em>, Aljowaysir removes people from Orientalist photographs as a refusal to supply their images to AI training. My work reverses that gesture: the person remains visible while a deliberately fictional classification interface grows more aggressive and eventually collapses. Refusal moves from the erased human figure to the authority of the category itself.</p></div>
+      </div>
+    </section>
+
+    <section class="closing wrap" aria-label="Closing statement"><h2>VISIBLE.<br>NOT<br>AVAILABLE.</h2><div><p>Classification is not understanding.<br>Visibility is not consent.<br>A person is not the sum of their labels.</p><a href="#experience" class="inline-link mono">REPLAY THE EXPERIENCE ↗</a></div></section>
+  </main>
+  <footer><div class="wrap"><span>THE IMAGE THAT REFUSED / INTERACTIVE COUNTER-ARCHIVE / 2026</span><span>Original work: Nouf Aljowaysir, <em>Salaf</em> (2020)</span><a href="https://doi.org/10.1162/OCTO.a.545">ARTICLE / DOI ↗</a></div></footer>
+  <script>
+    (()=>{
+      'use strict';
+      const stage=document.getElementById('stage');
+      const machine=document.getElementById('machine');
+      const button=document.getElementById('next');
+      const restart=document.getElementById('restart');
+      const headline=document.getElementById('step-heading');
+      const description=document.getElementById('step-description');
+      const toolbar=document.getElementById('toolbar-status');
+      const stageStatus=document.getElementById('stage-status');
+      const readStage=document.getElementById('read-stage');
+      const operation=document.getElementById('read-operation');
+      const output=document.getElementById('read-output');
+      const announcer=document.getElementById('live-announcement');
+      const bars=[...document.querySelectorAll('#progress b')];
+      let step=0;
+      const scenes=[
+        {name:'',heading:'A person, not a data point.',desc:'Press START SCAN. Watch what is removed each time the system tries to make the image measurable.',op:'WAITING',out:'UNASSIGNED',caption:'AWAITING CLASSIFICATION',status:'READY',button:'START SCAN ↗'},
+        {name:'stage-detect',heading:'01 — DETECT.',desc:'A face becomes a coordinate. The system has found a boundary, not an identity.',op:'DETECTION',out:'FACE / 001',caption:'LOCATING THE VISIBLE',status:'SCANNING',button:'NEXT: CLASSIFY ↗'},
+        {name:'stage-classify',heading:'02 — CLASSIFY.',desc:'Labels accumulate around the portrait. The machine can name surfaces, not the life they belong to.',op:'CLASSIFICATION',out:'FOUR LABELS',caption:'ASSIGNING CATEGORIES',status:'LABELING',button:'NEXT: REDUCE ↗'},
+        {name:'stage-reduce',heading:'03 — REDUCE.',desc:'A whole person becomes fragments: face, fabric, ornament, cropped regions. More data; less context.',op:'FRAGMENTATION',out:'PERSON → DATA',caption:'CONTEXT DISCARDED',status:'EXTRACTION',button:'FINAL: REFUSE ↗'},
+        {name:'stage-refusal',heading:'04 — REFUSE.',desc:'The classifier loses its labels. The image remains. A life is never exhausted by its metadata.',op:'REFUSAL',out:'LABELS REMOVED',caption:'THE IMAGE REMAINS',status:'REFUSED',button:'VIEW COUNTER-ARCHIVE ↗'}
+      ];
+      function draw(){
+        const s=scenes[step];
+        stage.className='stage'+(s.name?' '+s.name:'');
+        machine.dataset.step=String(step);
+        headline.textContent=s.heading;description.textContent=s.desc;
+        readStage.textContent=String(step).padStart(2,'0')+' / 04';
+        operation.textContent=s.op;output.textContent=s.out;
+        stageStatus.textContent=s.caption;toolbar.textContent=s.status;
+        button.textContent=s.button;
+        bars.forEach((el,i)=>el.classList.toggle('on',i<step));
+        restart.hidden=step===0;
+        announcer.textContent=s.heading+' '+s.desc;
+      }
+      function advance(){if(step<4){step++;draw();}else{document.getElementById('counter').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}}
+      function reset(){step=0;draw();button.focus();}
+      button.addEventListener('click',advance);
+      restart.addEventListener('click',reset);
+      draw();
+    })();
+  </script>
+</body>
+</html>
